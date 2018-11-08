@@ -25,6 +25,7 @@
  */
 package org.apache.spark.sql.geosparksql.expressions
 
+import com.sun.jdi.BooleanType
 import com.vividsolutions.jts.geom.{Coordinate, GeometryFactory}
 import org.apache.spark.sql.catalyst.InternalRow
 import org.apache.spark.sql.catalyst.expressions.Expression
@@ -155,6 +156,9 @@ case class ST_GeomFromWKT(inputExpressions: Seq[Expression])
     var fileDataSplitter = FileDataSplitter.WKT
     var formatMapper = new FormatMapper(fileDataSplitter, false)
     var geometry = formatMapper.readGeometry(geomString)
+    if (geometry == null){
+      return new GenericArrayData(Array.empty)
+    }
     // If the user specify a bunch of attributes to go with each geometry, we need to store all of them in this geometry
     if (inputExpressions.length > minInputLength) {
       geometry.setUserData(generateUserData(minInputLength, inputExpressions, inputRow))
@@ -198,7 +202,6 @@ case class ST_GeomFromWKB(inputExpressions: Seq[Expression])
 
   override def children: Seq[Expression] = inputExpressions
 }
-
 /**
   * Return a Geometry from a GeoJSON string
   *

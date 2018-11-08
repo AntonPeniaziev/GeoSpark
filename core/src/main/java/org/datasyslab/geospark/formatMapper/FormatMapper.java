@@ -44,6 +44,8 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import static loci.formats.LogTools.print;
+
 public class FormatMapper
         implements Serializable
 {
@@ -175,7 +177,17 @@ public class FormatMapper
             throws ParseException
     {
         final String[] columns = line.split(splitter.getDelimiter());
-        final Geometry geometry = wktReader.read(columns[this.startOffset]);
+        Geometry geometry = null;
+        try {
+            geometry = wktReader.read(columns[this.startOffset]);
+        }
+        catch (Exception e){
+            print("[GeoSpark] " + e.getMessage());
+        }
+        if (geometry == null){
+            return null;
+        }
+        //final Geometry geometry = wktReader.read(columns[this.startOffset]);
         if (carryInputData) {
             boolean firstColumnFlag = true;
             otherAttributes = "";

@@ -51,6 +51,9 @@ object GeometrySerializer {
     val kryo = new Kryo()
     val geometrySerde = new GeometrySerde()
     val input = new Input(in)
+    if (values.numElements() == 0){
+      return null
+    }
     val geometry = geometrySerde.read(kryo, input, classOf[Geometry])
     input.close()
     return geometry.asInstanceOf[Geometry]

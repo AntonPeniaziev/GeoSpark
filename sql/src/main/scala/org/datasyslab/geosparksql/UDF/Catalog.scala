@@ -38,6 +38,7 @@ object Catalog {
     ST_GeomFromWKT,
     ST_GeomFromWKB,
     ST_GeomFromGeoJSON,
+    ST_IsValid,
     ST_Circle,
     ST_Point,
     ST_PolygonFromEnvelope,
